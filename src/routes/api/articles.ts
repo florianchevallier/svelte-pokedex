@@ -1,6 +1,6 @@
 // Require the package
 import googleNewsScraper from 'google-news-scraper';
-import type { IArticle } from 'src/types/types
+import type { IArticle } from 'src/types/types'
 
 
 export async function get() {
