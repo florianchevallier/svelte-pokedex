@@ -15,7 +15,7 @@
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
-		"baseUrl": "..",
+		"baseUrl": ".",
 		"allowJs": true,
 		"checkJs": true,
 		"paths": {
@@ -28,7 +28,6 @@
 		},
 		"rootDirs": [
 			"./",
-			"./types"
 		]
 	},
 	"include": [
