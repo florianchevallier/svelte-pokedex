@@ -1,0 +1,10 @@
+schema: https://beta.pokeapi.co/graphql/v1beta
+documents: "./src/**/*.gql"
+generates:
+  ./src/graphql/generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - graphql-codegen-svelte-apollo
+    config:
+      clientPath: "src/client"

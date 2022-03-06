@@ -1,0 +1,28 @@
+$primary: #f4fbfb;
+$secondary: #2e3156;
+$text: #8e909b;
+$grey: #ebf3f5;
+
+$pkcolor-black: #000000;
+$pkcolor-blue: #77bdfe;
+$pkcolor-brown: #8e909b;
+$pkcolor-gray: #b4b4b4;
+$pkcolor-green: #46d7ab;
+$pkcolor-pink: #f0b5b3;
+$pkcolor-purple: #845ec2;
+$pkcolor-red: #fb6c6c;
+$pkcolor-white: #f4fbfb;
+$pkcolor-yellow: #ffce4b;
+
+$pk-colors: (
+  "black": $pkcolor-black,
+  "blue": $pkcolor-blue,
+  "brown": $pkcolor-brown,
+  "gray": $pkcolor-gray,
+  "green": $pkcolor-green,
+  "pink": $pkcolor-pink,
+  "purple": $pkcolor-purple,
+  "red": $pkcolor-red,
+  "white": $pkcolor-white,
+  "yellow": $pkcolor-yellow,
+);

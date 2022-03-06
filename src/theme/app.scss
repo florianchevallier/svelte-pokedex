@@ -1,0 +1,22 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css";
+
+@import "./variables.scss";
+@import "./colors.scss";
+@import "./fonts.scss";
+
+body {
+  font-family: "CircularStd-Book", sans-serif;
+}
+
+.page {
+  position: relative;
+}
+
+@each $type, $color-value in $pk-colors {
+  .pkcolor-bg-#{$type} {
+    background-color: $color-value;
+  }
+  .pkcolor-txt-#{$type} {
+    color: $color-value;
+  }
+}
