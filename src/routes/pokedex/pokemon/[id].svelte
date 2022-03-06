@@ -1,19 +1,21 @@
 <script lang="ts">
-	import type { IPokemon, IPokemonSpecies, IType } from 'pokeapi-typescript';
+	import type { IEvolutionChain, IPokemon, IPokemonSpecies, IType } from 'pokeapi-typescript';
 	import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@rgossiaux/svelte-headlessui';
-	import type { IDamagesInfos } from 'src/types/types';
+	import type { IChains, IDamagesInfos } from 'src/types/types';
 	export let pokemonSpecie: IPokemonSpecies;
 	export let pokemon: IPokemon;
 	export let pokemonTypes: IType[];
 	export let eggGroups: string[];
 	export let pokemonStats: { name: string; value: number }[];
 	export let damagesInfos: IDamagesInfos;
+	export let chains: IChains[];
+	export let varietties: IPokemon[];
 	import { getPokemonName } from 'src/utils/pokemon';
 	import Header from 'src/components/Header.svelte';
 	import About from '$lib/pokemon/About.svelte';
 	import Pill from 'src/components/Pill.svelte';
-	import { goto } from '$app/navigation';
 	import Stats from '$lib/pokemon/Stats.svelte';
+	import Evolutions from '$lib/pokemon/Evolutions.svelte';
 	const BASE_IMAGE_URL =
 		'https://github.com/PokeAPI/sprites/blob/master/sprites/pokemon/other/official-artwork/';
 </script>
@@ -73,7 +75,7 @@
 					>
 					<Tab
 						class={({ selected }) =>
-							selected ? 'pkmn-tab tab-selected' : 'pkmn-tab tab-unselected'}>Evolution</Tab
+							selected ? 'pkmn-tab tab-selected' : 'pkmn-tab tab-unselected'}>Evolutions</Tab
 					>
 					<Tab
 						class={({ selected }) =>
@@ -85,7 +87,9 @@
 					<TabPanel>
 						<Stats stats={pokemonStats} color={pokemonSpecie.color.name} {damagesInfos} />
 					</TabPanel>
-					<TabPanel>Content 3</TabPanel>
+					<TabPanel>
+						<Evolutions {pokemonSpecie} {varietties} {chains} />
+					</TabPanel>
 					<TabPanel>Content 4</TabPanel>
 				</TabPanels>
 			</TabGroup>

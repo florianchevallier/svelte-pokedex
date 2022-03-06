@@ -1,4 +1,5 @@
-import type { IName, IFlavorText, IType, INamedApiResource, ITypeRelations } from "pokeapi-typescript";
+import { flattenDeep } from "lodash";
+import type { IName, IFlavorText, IType, INamedApiResource, ITypeRelations, IPokemonType, IChainLink, IItem, ILocation } from "pokeapi-typescript";
 import PokeAPI from "pokeapi-typescript";
 import type { NamedEndpointParam } from "pokeapi-typescript/dist/classes/NamedEndpoint";
 import type { IDamagesInfos } from "src/types/types";
@@ -66,6 +67,38 @@ export async function getPokemonInfos(id: NamedEndpointParam, language: string) 
     })
   );
 
+  const damagesInfos = getDamagesInfos(pokemonTypes);
+
+  const evolutionChains = await PokeAPI.EvolutionChain.resolve(+specie.evolution_chain.url.split('/').slice(-2)[0]);
+
+  const varietties = await Promise.all(
+    specie.varieties.filter(v => v.is_default === false).map(async (variety) => {
+      const v = await PokeAPI.Pokemon.resolve(variety.pokemon.name);
+      const form = await PokeAPI.PokemonForm.resolve(variety.pokemon.name);
+      return {
+        ...v,
+        name: (v.name.includes('mega') ? getPokemonName(form.names, 'fr') : `${getPokemonName(specie.names, 'fr')} Gigamax`),
+      };
+    })
+  );
+
+  // On fait le premier maillon
+  const chains = await getEvolutionDetails(evolutionChains.chain.species.name, evolutionChains.chain.evolves_to);
+
+  return {
+    specie,
+    eggGroups,
+    pokemonTypes,
+    general,
+    pokemonStats,
+    damagesInfos,
+    evolutionChains,
+    chains: flattenDeep(chains),
+    varietties
+  }
+}
+
+function getDamagesInfos(pokemonTypes: IType[]) {
   const sensitivities = pokemonTypes.reduce((prev, curr) => {
     curr.damage_relations.half_damage_from.forEach((t) => {
       prev[t.name] = prev[t.name] ? prev[t.name] * 0.5 : 0.5;
@@ -112,7 +145,61 @@ export async function getPokemonInfos(id: NamedEndpointParam, language: string) 
     immunities,
   }
 
-  return {
-    specie, eggGroups, pokemonTypes, general, pokemonStats, damagesInfos
-  }
+  return damagesInfos;
+}
+
+async function getEvolutionDetails(from: string, evolves_to: IChainLink[]) {
+  return await Promise.all(evolves_to.map(async (evolution) => {
+    const specieFrom = await PokeAPI.PokemonSpecies.resolve(from);
+    const specieTo = await PokeAPI.PokemonSpecies.resolve(evolution.species.name);
+    let chains = [];
+    if (evolution.evolves_to.length > 0) {
+      chains = await getEvolutionDetails(evolution.species.name, evolution.evolves_to);
+    }
+    const evolutionDetails = await Promise.all(evolution.evolution_details.map(async (evolutionDetail) => {
+      const evolutionTrigger = await PokeAPI.EvolutionTrigger.resolve(evolutionDetail.trigger.name);
+      const evolutionTriggerName = evolutionTrigger.names.find((n) => n.language.name === 'fr').name;
+
+      let evolutionItem: IItem;
+      if (evolutionDetail.item) {
+        evolutionItem = await PokeAPI.Item.resolve(evolutionDetail.item.name);
+      }
+
+      let knownMoveType: IType;
+      if (evolutionDetail.known_move_type) {
+        knownMoveType = await PokeAPI.Type.resolve(evolutionDetail.known_move_type.name);
+      }
+
+      let locations: ILocation;
+      if (evolutionDetail.location) {
+        locations = await PokeAPI.Location.resolve(evolutionDetail.location.name);
+      }
+
+
+      return {
+        ...evolutionDetail,
+        trigger: {
+          ...evolutionDetail.trigger,
+          name: evolutionTriggerName,
+        },
+        item: evolutionItem ? {
+          ...evolutionDetail.item,
+          name: evolutionItem.names.find((n) => n.language.name === 'fr').name,
+        } : null,
+        known_move_type: knownMoveType ? {
+          ...evolutionDetail.known_move_type,
+          name: knownMoveType.names.find((n) => n.language.name === 'fr').name,
+        } : null,
+        location: locations ? {
+          ...evolutionDetail.location,
+          name: locations.names.find((n) => n.language.name === 'fr').name,
+        } : null
+      };
+    }));
+    return [{
+      specieFrom,
+      specieTo,
+      evolutionDetails: evolutionDetails
+    }, ...chains];
+  }));
 }
