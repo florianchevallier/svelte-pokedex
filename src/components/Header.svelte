@@ -1,4 +1,6 @@
 <script type="ts">
+	import { goto } from '$app/navigation';
+
 	import { page } from '$app/stores';
 	import type { IUser } from 'src/routes/api/_db';
 	import request from 'src/utils/request';
@@ -6,6 +8,7 @@
 	import Icon from './Icon.svelte';
 
 	export let white: boolean = false;
+	export let to = '/';
 
 	let src = '/assets/pokeball-menu.svg';
 	const hasHistory = typeof window !== 'undefined' && history.length > 1;
@@ -22,7 +25,7 @@
 	{#if hasHistory && !isHome}
 		<Icon
 			stroke={white ? '#FFF' : '#000'}
-			on:click={() => history.go(-1)}
+			on:click={() => goto(to)}
 			name="arrow-left"
 			strokeWidth="3"
 		/>

@@ -24,11 +24,12 @@
 	import Pill from 'src/components/Pill.svelte';
 	import Stats from '$lib/pokemon/Stats.svelte';
 	import Evolutions from '$lib/pokemon/Evolutions.svelte';
+	import Moves from '$lib/pokemon/Moves.svelte';
 	const BASE_IMAGE_URL =
 		'https://github.com/PokeAPI/sprites/blob/master/sprites/pokemon/other/official-artwork/';
 </script>
 
-<Header white class="pkcolor-bg-{pokemonSpecie.color.name}" />
+<Header white class="pkcolor-bg-{pokemonSpecie.color.name}" to="/pokedex" />
 <div class="page">
 	<div class="pokemon-details pkcolor-bg-{pokemonSpecie.color.name}">
 		<div class="header">
@@ -98,7 +99,7 @@
 					<TabPanel>
 						<Evolutions {pokemonSpecie} {varietties} {chains} />
 					</TabPanel>
-					<TabPanel>Content 4</TabPanel>
+					<TabPanel><Moves {moves} /></TabPanel>
 				</TabPanels>
 			</TabGroup>
 		</div>

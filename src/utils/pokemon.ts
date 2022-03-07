@@ -87,7 +87,6 @@ export async function getPokemonInfos(id: NamedEndpointParam, language: string) 
 
   const moves = await Promise.all(
     general.moves.map(async (move) => {
-      const m = await PokeAPI.Move.resolve(move.move.name);
       const versionDetailGroup = await Promise.all(
         move.version_group_details.map(async (vd) => {
           const moveLearnMethod = await PokeAPI.MoveLearnMethod.resolve(vd.move_learn_method.name);
@@ -110,18 +109,23 @@ export async function getPokemonInfos(id: NamedEndpointParam, language: string) 
   const finalMoves = await Promise.all(moves.map(async m => {
 
     const moveFull = await PokeAPI.Move.resolve(m.move.name);
+    const moveType = await PokeAPI.Type.resolve(moveFull.type.name);
     const versionGroup = m.version_group_details[m.version_group_details.length - 1];
     const versionGroupFinal = await PokeAPI.VerionGroup.resolve(versionGroup.version_group.name);
 
     return {
-      move: moveFull,
+      move: {
+        ...moveFull,
+        type: {
+          ...moveFull.type,
+          name: moveType.names.find((n) => n.language.name === language)?.name || moveType.names.find((n) => n.language.name === 'en')?.name,
+        }
+      },
       version_group: versionGroupFinal,
       move_learn_method: versionGroup.move_learn_method,
       level_learned_at: versionGroup.level_learned_at
     }
   }));
-
-  console.log('finalMoves', finalMoves);
 
   return {
     specie,
