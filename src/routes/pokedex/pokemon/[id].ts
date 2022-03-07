@@ -9,7 +9,8 @@ export async function get({ params }) {
     pokemonStats,
     damagesInfos,
     chains,
-    varietties
+    varietties,
+    moves
   } = await getPokemonInfos(pokemonId, params.language || 'fr');
 
   if (specie) {
@@ -22,7 +23,8 @@ export async function get({ params }) {
         pokemonStats,
         damagesInfos,
         chains,
-        varietties
+        varietties,
+        moves
       }
     };
   }

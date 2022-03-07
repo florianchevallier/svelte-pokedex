@@ -1,4 +1,4 @@
-import type { IEvolutionDetail, IPokemonSpecies } from "pokeapi-typescript"
+import type { IEvolutionDetail, IMove, IMoveLearnMethod, IPokemonSpecies, IVersionGroup } from "pokeapi-typescript"
 
 export interface IArticle {
   title: string,
@@ -19,4 +19,11 @@ export interface IChains {
   specieFrom: IPokemonSpecies,
   specieTo: IPokemonSpecies,
   evolutionDetails: IEvolutionDetail[]
+}
+
+export interface IMoves {
+  move: IMove,
+  version_group: IVersionGroup,
+  move_learn_method: IMoveLearnMethod,
+  level_learned_at: number
 }

@@ -1,7 +1,13 @@
 <script lang="ts">
-	import type { IEvolutionChain, IPokemon, IPokemonSpecies, IType } from 'pokeapi-typescript';
+	import type {
+		IEvolutionChain,
+		IMove,
+		IPokemon,
+		IPokemonSpecies,
+		IType
+	} from 'pokeapi-typescript';
 	import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@rgossiaux/svelte-headlessui';
-	import type { IChains, IDamagesInfos } from 'src/types/types';
+	import type { IChains, IDamagesInfos, IMoves } from 'src/types/types';
 	export let pokemonSpecie: IPokemonSpecies;
 	export let pokemon: IPokemon;
 	export let pokemonTypes: IType[];
@@ -9,6 +15,8 @@
 	export let pokemonStats: { name: string; value: number }[];
 	export let damagesInfos: IDamagesInfos;
 	export let chains: IChains[];
+	export let moves: IMoves[];
+
 	export let varietties: IPokemon[];
 	import { getPokemonName } from 'src/utils/pokemon';
 	import Header from 'src/components/Header.svelte';

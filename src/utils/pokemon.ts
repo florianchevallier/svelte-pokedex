@@ -85,6 +85,44 @@ export async function getPokemonInfos(id: NamedEndpointParam, language: string) 
   // On fait le premier maillon
   const chains = await getEvolutionDetails(evolutionChains.chain.species.name, evolutionChains.chain.evolves_to);
 
+  const moves = await Promise.all(
+    general.moves.map(async (move) => {
+      const m = await PokeAPI.Move.resolve(move.move.name);
+      const versionDetailGroup = await Promise.all(
+        move.version_group_details.map(async (vd) => {
+          const moveLearnMethod = await PokeAPI.MoveLearnMethod.resolve(vd.move_learn_method.name);
+          return {
+            ...vd,
+            move_learn_method: {
+              ...moveLearnMethod,
+              name: moveLearnMethod.names.find((n) => n.language.name === 'fr')?.name || moveLearnMethod.names.find((n) => n.language.name === 'en')?.name,
+            }
+          };
+        }));
+      return {
+        ...move,
+        version_group_details: versionDetailGroup
+      };
+    })
+  );
+
+  // Tri parmis les move, car c'est bien trop fourni par rapport à ce dont on a besoin.
+  const finalMoves = await Promise.all(moves.map(async m => {
+
+    const moveFull = await PokeAPI.Move.resolve(m.move.name);
+    const versionGroup = m.version_group_details[m.version_group_details.length - 1];
+    const versionGroupFinal = await PokeAPI.VerionGroup.resolve(versionGroup.version_group.name);
+
+    return {
+      move: moveFull,
+      version_group: versionGroupFinal,
+      move_learn_method: versionGroup.move_learn_method,
+      level_learned_at: versionGroup.level_learned_at
+    }
+  }));
+
+  console.log('finalMoves', finalMoves);
+
   return {
     specie,
     eggGroups,
@@ -94,7 +132,8 @@ export async function getPokemonInfos(id: NamedEndpointParam, language: string) 
     damagesInfos,
     evolutionChains,
     chains: flattenDeep(chains),
-    varietties
+    varietties,
+    moves: finalMoves
   }
 }
 
