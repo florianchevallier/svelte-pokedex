@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-cloudflare';
+import adapter from '@sveltejs/adapter-static';
 import preprocess from 'svelte-preprocess';
 import path from 'path';
 
@@ -13,6 +13,7 @@ const config = {
 
 	kit: {
 		adapter: adapter(),
+		target: '#svelte',
 
 		// Override http methods in the Todo forms
 		methodOverride: {
