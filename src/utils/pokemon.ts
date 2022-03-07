@@ -1,5 +1,5 @@
-import { flattenDeep } from "lodash";
-import type { IName, IFlavorText, IType, INamedApiResource, ITypeRelations, IPokemonType, IChainLink, IItem, ILocation } from "pokeapi-typescript";
+import flattenDeep from "lodash/flattenDeep.js";
+import type { IName, IFlavorText, IType, INamedApiResource, ITypeRelations, IChainLink, IItem, ILocation } from "pokeapi-typescript";
 import PokeAPI from "pokeapi-typescript";
 import type { NamedEndpointParam } from "pokeapi-typescript/dist/classes/NamedEndpoint";
 import type { IDamagesInfos } from "src/types/types";

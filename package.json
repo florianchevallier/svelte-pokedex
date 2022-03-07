@@ -15,7 +15,7 @@
     "@rgossiaux/svelte-headlessui": "^1.0.0-beta.10",
     "@sveltejs/adapter-auto": "next",
     "@sveltejs/adapter-netlify": "^1.0.0-next.50",
-    "@sveltejs/kit": "next",
+    "@sveltejs/kit": "^1.0.0-next.294",
     "@types/cookie": "^0.4.1",
     "@types/feather-icons": "^4.7.0",
     "@types/uuid": "^8.3.4",
